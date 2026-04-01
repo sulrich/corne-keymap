@@ -1,2 +1,3 @@
 EXTRAKEY_ENABLE = yes
-OLED_DRIVER_ENABLE  = yes
+CAPS_WORD_ENABLE = yes
+OLED_ENABLE         = yes

@@ -38,9 +38,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_TRNS, KC_HASH,  KC_DLR, KC_LPRN, KC_RPRN,KC_GRAVE,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, KC_TRNS,KC_ENTER,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TRNS, KC_PERC, KC_CIRC, KC_LBRC, KC_RBRC, KC_TILD,                      KC_UNDS, KC_AMPR, KC_LABK, KC_RABK,KC_BSLASH,KC_TRNS,
+      KC_TRNS, KC_PERC, KC_CIRC, KC_LBRC, KC_RBRC, KC_TILD,                      KC_UNDS, KC_AMPR, KC_LABK, KC_RABK, KC_BSLS, KC_TRNS,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_TRNS, KC_TRNS,KC_BSPACE,   KC_TRNS, KC_TRNS, KC_TRNS
+                                          KC_TRNS, KC_TRNS,  KC_BSPC,   KC_TRNS, KC_TRNS, KC_TRNS
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -57,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (!is_keyboard_master()) {
     return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
@@ -65,21 +65,20 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   return rotation;
 }
 
-#define L_BASE 0
-#define L_SYMBOLS 2
-#define L_NUMBERS 4
-
 void oled_render_layer_state(void) {
     oled_write_P(PSTR("layer: "), false);
-    switch (layer_state) {
-        case L_BASE:
+    switch (get_highest_layer(layer_state)) {
+        case 0:
             oled_write_ln_P(PSTR("default"), false);
             break;
-        case L_SYMBOLS:
+        case 1:
             oled_write_ln_P(PSTR("symbols"), false);
             break;
-        case L_NUMBERS:
+        case 2:
             oled_write_ln_P(PSTR("numbers/media"), false);
+            break;
+        default:
+            oled_write_ln_P(PSTR("unknown"), false);
             break;
    }
 }
@@ -137,13 +136,14 @@ void oled_render_logo(void) {
     oled_write_P(crkbd_logo, false);
 }
 
-void oled_task_user(void) {
+bool oled_task_user(void) {
     if (is_keyboard_master()) {
         oled_render_layer_state();
         oled_render_keylog();
     } else {
         oled_render_logo();
     }
+    return false;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -152,5 +152,5 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
-#endif // OLED_DRIVER_ENABLE
+#endif // OLED_ENABLE
 
