@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-// double-tap left shift to enable caps-word
-#define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
+// enable by holding down left + right shift keys for a tapping term.
+#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 // pressing shift- doesn't disable word definition w/caps-word
 #define CAPS_WORD_INVERT_ON_SHIFT
 
